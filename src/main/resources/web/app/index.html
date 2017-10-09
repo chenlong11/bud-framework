@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>首页</title>
+    [#include "/include/includeCss.html"/]
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <!--头部-->
+    [#include "/include/mainHeader.html"/]
+    <!--左侧-->
+    [#include "/include/leftSideColumn.html" /]
+    <!-- 主内容区 -->
+    <div id="main_content" class="content-wrapper"></div>
+    <!--页脚-->
+    [#include "/include/footer.html" /]
+
+</div>
+[#include "/include/includeJs.html"/]
+<script>
+    $(function () {
+        //默认首页
+
+    })
+</script>
+
+</body>
+</html>

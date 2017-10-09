@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>流程配置</title>
+    [#include "/include/includeCss.html"/]
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="row">
+    <div class="col-md-7">
+        <img class="img-responsive" src="${base}/app/admin/flow/process/${deploymentId}/image" alt="Photo">
+    </div>
+    <div class="col-md-5">
+        <!-- Custom Tabs -->
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab_1" data-toggle="tab">全局设置</a></li>
+                <li><a href="#tab_2" data-toggle="tab">节点表单</a></li>
+                <li><a href="#tab_3" data-toggle="tab">节点人员</a></li>
+                <li><a href="#tab_4" data-toggle="tab">节点属性</a></li>
+            </ul>
+            <div class="tab-content">
+                <!--全局表单-->
+                <div class="tab-pane active" id="tab_1">
+                    <form class="form-horizontal">
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">全局表单</label>
+                                <div class="col-sm-10">
+                                    <select id="globleFormType" name="globleFormType" class="form-control">
+                                        <option value="1">自定义表单</option>
+                                        <option value="2">url表单</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="globleUrlDiv" class="form-group" style="display: none;">
+                                <label for="globleFormUrl" class="col-sm-2 control-label">url地址</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="globleFormUrl" placeholder="url地址">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!--节点表单-->
+                <div class="tab-pane" id="tab_2">
+                    <form class="form-horizontal">
+                        <div class="box-body">
+                            [#list flowElements as item]
+                            <h2 class="page-header">
+                                <small>${item.name}</small>
+                            </h2>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">表单</label>
+                                <div class="col-sm-10">
+                                    <select id="${item.id}FormType" name="${item.id}FormType" class="form-control">
+                                        <option value="1">自定义表单</option>
+                                        <option value="2">url表单</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="${item.id}UrlDiv" class="form-group" style="display: none;">
+                                <label for="${item.id}FormUrl" class="col-sm-2 control-label">url地址</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="${item.id}FormUrl" placeholder="url地址">
+                                </div>
+                            </div>
+                            [/#list]
+                        </div>
+                    </form>
+                </div>
+                <!--节点人员-->
+                <div class="tab-pane" id="tab_3">
+                    <form class="form-horizontal">
+                        <div class="box-body">
+                            [#list flowElements as item]
+                            <h2 class="page-header">
+                                <small>${item.name}</small>
+                            </h2>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">节点人员</label>
+                                <label class="col-sm-3">
+                                    <button type="button" class="btn btn-block btn-default"><i class="fa fa-fw fa-user"></i> 选择</button>
+                                </label>
+                                <label class="col-sm-7">&nbsp;</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">&nbsp;</label>
+                                <div class="col-sm-10 pull-left">暂未选择.</div>
+                            </div>
+                            [/#list]
+                        </div>
+                    </form>
+                </div>
+                <!--节点属性-->
+                <div class="tab-pane" id="tab_4">
+                    <form class="form-horizontal">
+                        <div class="box-body">
+                            [#list flowElements as item]
+                            <h2 class="page-header">
+                                <small>${item.name}</small>
+                            </h2>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">跳转类型</label>
+                                <div class="checkbox col-sm-10">
+                                    <label><input type="checkbox" value="1">正常跳转</label>
+                                    <label><input type="checkbox" value="2">自动跳转</label>
+                                    <label><input type="checkbox" value="3">选择路径</label>
+                                </div>
+                            </div>
+                            [/#list]
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+[#include "/include/includeJs.html"/]
+
+<script>
+
+    $(function () {
+        //匹配所有以FormType结尾的
+        $('select[id$=FormType]').change(function () {
+            console.log('enter');
+            var id = $(this).attr('id');
+            var identify = id.substring(0, id.indexOf('FormType'));
+            console.log(identify)
+            if ($(this).val() == '1') {
+                $('#' + identify + 'FormUrl').val('');
+                $('#' + identify + 'UrlDiv').hide();
+            } else {
+                $('#' + identify + 'UrlDiv').show();
+            }
+        });
+    })
+
+</script>
+
+</body>
+</html>
+
+
+

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>流程列表</title>
+    [#include "/include/includeCss.html"/]
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <!--头部-->
+    [#include "/include/mainHeader.html"/]
+    <!--左侧-->
+    [#include "/include/leftSideColumn.html" /]
+    <!-- 主内容区 -->
+    <div id="main_content" class="content-wrapper">
+
+        <section class="content-header">
+            <h1>
+                &nbsp;
+                <small>Version 1.0</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-home"></i> 首页</a></li>
+                <li class="active">流程设置</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">流程列表</h3>
+                        </div>
+
+                        <!-- /.box-header -->
+                        <div class="box-body">
+
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-table" onclick="add()">&nbsp;&nbsp;新增&nbsp;&nbsp;</button>
+                                <button type="button" class="btn btn-table" onclick="edit()">&nbsp;&nbsp;修改&nbsp;&nbsp;</button>
+                                <button type="button" class="btn btn-table" onclick="design()">&nbsp;&nbsp;设计&nbsp;&nbsp;</button>
+                                <button type="button" class="btn btn-table" onclick="public()">&nbsp;&nbsp;发布&nbsp;&nbsp;</button>
+                                <button type="button" class="btn btn-table" onclick="config()">&nbsp;&nbsp;设置&nbsp;&nbsp;</button>
+                                <button type="button" class="btn btn-table" onclick="start()">&nbsp;&nbsp;启动&nbsp;&nbsp;</button>
+                                <button type="button" class="btn btn-table" onclick="del()">&nbsp;&nbsp;删除&nbsp;&nbsp;</button>
+                            </div>
+
+                            <table id="myTable" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th width="20%">序号</th>
+                                    <th width="20%">名称</th>
+                                    <th width="20%">标识</th>
+                                    <th width="20%">创建时间</th>
+                                    <th width="20%">状态</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!--页脚-->
+    [#include "/include/footer.html" /]
+
+</div>
+
+<div id="constainer_dialog">
+
+</div>
+<!-- Modal -->
+
+
+[#include "/include/includeJs.html"/]
+
+<script>
+
+    var table = null;
+
+    $(function () {
+        search();
+    })
+
+    function search() {
+        if (table == null) {
+            table = $('#myTable').table({
+                url: "${base}/app/admin/flow/model/data",
+                ordering: false,
+                order: [4, 'desc'],
+                columns: [
+                    {
+                        //className: "custom",
+                        render: function (data, type, row, meta) {
+                            //隐藏
+                            var input = '<input type="hidden" id="id" value="' + row.id + '"/>' +
+                                '<input type="hidden" id="deploymentId" value="' + row.deploymentId + '"/>' ;
+                            // 显示行号
+                            var startIndex = meta.settings._iDisplayStart + meta.row + 1;
+                            return startIndex + input;
+                        }
+                    },
+                    {data: "name", orderable: false},
+                    {data: "key", orderable: false},
+                    {data: "created", orderable: false},
+                    {render: function (data, type, row, meta) {
+                        if(row.deploymentId){
+                            return '已发布';
+                        }else{
+                            return '未发布';
+                        }
+                    }}
+                ]
+            });
+        } else {
+            table.ajax.reload();
+        }
+    }
+
+    function add() {
+        $("#constainer_dialog").load('${base}/app/admin/flow/model/new', function () {
+            $('#addModal').modal('show');
+        })
+    }
+
+    function edit() {
+        var id = getSelectId();
+        if (id) {
+            $("#constainer_dialog").load('${base}/app/admin/flow/model/'+id+'/edit', function () {
+                $('#editModal').modal('show');
+            });
+        }else{
+            layerAlert('请选择要操作的记录');
+        }
+    }
+
+    function del() {
+        var id = getSelectId();
+        if (id) {
+            $.ajax({
+                url: '${base}/app/admin/flow/model/' + id,
+                type: 'post',
+                data: {_method:'delete'},
+                success: function () {
+                    search();
+                }
+            });
+        }else{
+            layerAlert('请选择要操作的记录');
+        }
+    }
+
+    function public() {
+        var id = getSelectId();
+        if(id){
+            $.post('${base}/app/admin/flow/model/'+id+'/public',{},function () {
+                search();
+                layerAlert('发布成功');
+            });
+        }else{
+            layerAlert('请选择要操作的记录');
+        }
+    }
+
+    function design() {
+        var id = getSelectId();
+        if(id){
+            var index = top.layer.open({
+                area:['100%','100%'],
+                type:2,
+                title:'流程图设计',
+                content:'${base}/app/admin/flow/editor/'+id+'/edit',
+                move:false
+            })
+        }else {
+            layerAlert('请选择要操作的记录');
+        }
+    }
+
+    function getSelectId() {
+        return $('#myTable tr.selected #id').val();
+    }
+
+    function getdeploymentId() {
+        return $('#myTable tr.selected #deploymentId').val();
+    }
+
+    function config() {
+        var deploymentId = getdeploymentId();
+        if(deploymentId){
+            var index = layer.open({
+                area:['100%','100%'],
+                type:2,
+                title:'流程配置',
+                content:'${base}/app/admin/flow/process/'+deploymentId+'/config',
+                move:false
+            })
+        } else {
+            layerAlert('请先发布流程');
+        }
+    }
+
+    function start() {
+        var deploymentId = getdeploymentId();
+        if(deploymentId){
+            layerAlert('功能开发中');
+        } else {
+            layerAlert('请先发布流程');
+        }
+    }
+
+</script>
+
+</body>
+</html>
+
+
+

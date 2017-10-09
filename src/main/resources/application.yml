@@ -1,0 +1,67 @@
+spring:
+  profiles:
+      active: dev
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  freemarker:
+    cache: false
+    charset: UTF-8
+    content-type: text/html
+    template-loader-path: classpath:/web/
+    suffix: .html
+    request-context-attribute: request
+    expose-spring-macro-helpers: true
+    expose-request-attributes: true
+    expose-session-attributes: true
+    check-template-location: true
+    allow-session-override: true
+    settings:
+      template_update_delay: 0
+      url_escaping_charset: UTF-8
+      default_encoding: UTF-8
+      whitespace_stripping: true
+      locale: zh_CN
+      tag_syntax: square_bracket
+      classic_compatible: true
+      template_exception_handler: ignore
+  datasource:
+    druid:
+      #初始化大小，最大，最小
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      #连接等待超时时间
+      max-wait: 60000
+      #多久进行一次检测，检测需要关闭的空闲连接
+      time-between-eviction-runs-millis: 60000
+      #一个连接在池中的最小链接时间
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 'x'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      #打开PSChache，指定每个连接上PSChache的大小
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: org.bud.framework.repository
+logging:
+  config: classpath:logback-core.xml
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+flowable:
+  check-process-definitions: false
+
+
+
+
+
