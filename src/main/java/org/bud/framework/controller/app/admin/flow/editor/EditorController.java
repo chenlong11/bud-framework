@@ -74,9 +74,9 @@ public class EditorController {
             ObjectNode stencilSetNode = objectMapper.createObjectNode();
             stencilSetNode.put("namespace", "http://b3mn.org/stencilset/bpmn2.0#");
             editorJsonNode.put("modelType", "model");
+            editorJsonNode.put("stencilset", stencilSetNode);
             modelNode.set("model", editorJsonNode);
         }
-
         return modelNode;
     }
 
