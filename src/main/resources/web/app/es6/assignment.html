@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>首页</title>
+</head>
+<body>
+
+<script>
+
+    var log = console.log.bind(console)
+
+    //map遍历
+    {
+        log('map遍历')
+        let x = [[1,2],[3,4]]
+        x = x.map(([k, v]) => k + v)
+        log(x)
+    }
+
+    //函数对象赋默认值
+    {
+        log('函数对象赋默认值')
+        function f({x = 0,y = 0} = {}) {
+            return [x, y]
+        }
+        log(f());
+    }
+
+    //值交换
+    {
+        log('值交换')
+        let x = 1
+        let y = 2;
+        [x, y] = [y, x]
+        log(x, y)
+    }
+
+
+    //返回多个值
+    {
+        log('返回多个值')
+        function f() {
+            return [1,2]
+        }
+
+        let [a , b] = f()
+        log(a, b)
+    }
+
+    //返回对象
+    {
+        log('返回对象')
+        function f() {
+            return {id:1, name:'zhang san'};
+        }
+        let {id,name} = f()
+        log(id, name)
+    }
+
+    //函数定义(参数是一组有次序的值)
+    {
+        log('函数定义(参数是一组有次序的值)')
+        function f([a, b, c]) {
+            log(a , b , c)
+        }
+        f([1,2,3])
+    }
+
+    //函数定义(参数是一组无序的值)
+    {
+        log('函数定义(参数是一组无序的值)')
+        function f({a, b, c}) {
+            log(a , b , c)
+        }
+        f({a:1, b:2 , c:3})
+    }
+
+    //提取json数据
+    {
+        log('提取json数据')
+        let jsonData = {
+            id:1,
+            name:'zhang san',
+            tel:[133,186],
+        }
+        let {id, name: rename, tel} = jsonData
+        log(id, rename, tel)
+
+    }
+
+    //函数参数默认值
+    {
+        log('函数参数默认值')
+        function doAjax(url,{
+            async = true,
+            cache  = true,
+            global = true,
+        } = {}) {
+            //do something
+            log(async, cache, global)
+        }
+
+        doAjax('www.baidu.com')
+    }
+
+    //遍历map
+    {
+        log('遍历map')
+        const map = new Map()
+        map.set('first','hello')
+        map.set('second','world')
+
+        for(let [key, val] of map){
+            log(key,val)
+        }
+    }
+
+
+
+</script>
+
+</body>
+</html>
