@@ -93,6 +93,10 @@ public class ModelProvider {
             builder.append(" ,deployment_id = #{deploymentId}  ");
         }
 
+        if(StringUtil.isNotNull(model.getProcessDefId())){
+            builder.append(" ,process_def_id = #{processDefId}  ");
+        }
+
         builder.append(" where id = #{id} ");
 
         return builder.toString();

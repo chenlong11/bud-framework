@@ -25,6 +25,7 @@ CREATE TABLE `act_de_model` (
   `thumbnail` longblob,
   `model_type` int(11) DEFAULT NULL,
   `deployment_id` varchar(64) DEFAULT "",
+  `process_def_id` varchar(64) DEFAULT "",
   PRIMARY KEY (`id`),
   KEY `idx_proc_mod_created` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

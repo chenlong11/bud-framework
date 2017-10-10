@@ -15,4 +15,6 @@ public interface ProcessService {
     InputStream getProcessImageView(String deploymentId);
 
     List<FlowElement> getFlowElementsByDeploymentId(String deploymentId);
+
+    void startFlow(String deploymentId, String businessId);
 }

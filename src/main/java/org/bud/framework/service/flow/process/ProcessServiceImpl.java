@@ -1,16 +1,14 @@
 package org.bud.framework.service.flow.process;
 
-import com.alibaba.fastjson.JSON;
 import org.flowable.bpmn.model.*;
 import org.flowable.engine.RepositoryService;
+import org.flowable.engine.RuntimeService;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by chenlong
@@ -22,6 +20,9 @@ public class ProcessServiceImpl implements ProcessService {
 
     @Autowired
     private RepositoryService repositoryService;
+
+    @Autowired
+    private RuntimeService runtimeService;
 
     @Override
     public InputStream getProcessImageView(String deploymentId) {
@@ -45,5 +46,12 @@ public class ProcessServiceImpl implements ProcessService {
             }
         }
         return list;
+    }
+
+    @Override
+    public void startFlow(String deploymentId, String businessId) {
+        String processDefId = repositoryService.createProcessDefinitionQuery().deploymentId(deploymentId).singleResult().getId();
+        Map variables = new HashMap();
+        runtimeService.startProcessInstanceById(processDefId, businessId, variables);
     }
 }

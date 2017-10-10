@@ -12,7 +12,12 @@ import org.bud.framework.repository.flow.ModelRepository;
 import org.bud.framework.util.StringUtil;
 import org.bud.framework.util.WebUtil;
 import org.bud.framework.vo.flow.ModelVo;
+import org.flowable.bpmn.converter.BpmnXMLConverter;
+import org.flowable.bpmn.model.BpmnModel;
+import org.flowable.editor.language.json.converter.BpmnJsonConverter;
 import org.flowable.editor.language.json.converter.util.JsonConverterUtil;
+import org.flowable.engine.RepositoryService;
+import org.flowable.engine.repository.Deployment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +46,9 @@ public class ModelServiceImpl implements ModelService {
 
     @Autowired
     protected ModelImageService modelImageService;
+
+    @Autowired
+    protected RepositoryService repositoryService;
 
     public ModelKeyRepresentation validateModelKey(Model model, Integer modelType, String key) {
         ModelKeyRepresentation modelKeyResponse = new ModelKeyRepresentation();
@@ -231,5 +239,28 @@ public class ModelServiceImpl implements ModelService {
         model.setLastUpdated(new Date());
         model.setLastUpdatedBy(WebUtil.getCurrentUser().getId());
         persistModel(model);
+    }
+
+    @Override
+    public void publicModel(String id) {
+        try {
+            org.bud.framework.po.flow.Model model = getModel(id);
+            ObjectNode modelNode = (ObjectNode) new ObjectMapper().readTree(model.getModelEditorJson());
+            byte[] bpmnBytes = null;
+
+            BpmnModel bpmnModel = new BpmnJsonConverter().convertToBpmnModel(modelNode);
+            bpmnBytes = new BpmnXMLConverter().convertToXML(bpmnModel);
+            String processName = model.getName() + ".bpmn20.xml";
+            Deployment deployment = repositoryService.createDeployment()
+                    .name(model.getName())
+                    .addString(processName, new String(bpmnBytes))
+                    .deploy();
+
+            String processDefId = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).singleResult().getId();
+            //回填model processDefId
+            saveModel(new org.bud.framework.po.flow.Model(model.getId(), deployment.getId(), processDefId));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

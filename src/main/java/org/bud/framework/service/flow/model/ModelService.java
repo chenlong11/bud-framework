@@ -28,4 +28,6 @@ public interface ModelService {
     Model getModel(String modelId);
 
     void saveModel(Model model);
+
+    void publicModel(String id);
 }

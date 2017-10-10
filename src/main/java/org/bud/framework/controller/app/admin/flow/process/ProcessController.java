@@ -3,7 +3,7 @@ package org.bud.framework.controller.app.admin.flow.process;
 import com.alibaba.fastjson.JSON;
 import org.bud.framework.service.flow.process.ProcessService;
 import org.flowable.bpmn.model.FlowElement;
-import org.flowable.engine.RepositoryService;
+import org.flowable.engine.RuntimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,10 +27,10 @@ import java.util.List;
 public class ProcessController {
 
     @Autowired
-    private RepositoryService repositoryService;
+    private ProcessService processService;
 
     @Autowired
-    private ProcessService processService;
+    private RuntimeService runtimeService;
 
     @RequestMapping(value = "/{deploymentId}/config", method = RequestMethod.GET)
     public String config(Model model,@PathVariable String deploymentId) {
@@ -59,5 +59,13 @@ public class ProcessController {
             e.printStackTrace();
         }
     }
+
+
+    @RequestMapping(value = "/{deploymentId}/start",method = RequestMethod.POST)
+    public void start(@PathVariable String deploymentId) {
+        String businessId = "";
+        processService.startFlow(deploymentId,businessId);
+    }
+
 
 }

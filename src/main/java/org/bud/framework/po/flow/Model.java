@@ -10,14 +10,17 @@ import lombok.Data;
 @Data
 public class Model extends AbstractModel{
 
-    public Model(String id,String deploymentId){
+    public Model(String id, String deploymentId, String processDefId) {
         this.id = id;
         this.deploymentId = deploymentId;
+        this.processDefId = processDefId;
     }
 
     private byte[] thumbnail;
 
     private String deploymentId;
+
+    private String processDefId;
 
     public Model() {
         super();

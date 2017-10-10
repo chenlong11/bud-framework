@@ -129,24 +129,7 @@ public class ModelController {
      */
     @RequestMapping(value = "/{id}/public",method = RequestMethod.POST)
     public ResponseEntity modelPublic(@PathVariable String id) {
-        try {
-            org.bud.framework.po.flow.Model model = modelService.getModel(id);
-            ObjectNode modelNode = (ObjectNode) new ObjectMapper().readTree(model.getModelEditorJson());
-            byte[] bpmnBytes = null;
-
-            BpmnModel bpmnModel = new BpmnJsonConverter().convertToBpmnModel(modelNode);
-            bpmnBytes = new BpmnXMLConverter().convertToXML(bpmnModel);
-            String processName = model.getName() + ".bpmn20.xml";
-            Deployment deployment = repositoryService.createDeployment()
-                    .name(model.getName())
-                    .addString(processName, new String(bpmnBytes))
-                    .deploy();
-
-            //回填model deployId
-            modelService.saveModel(new org.bud.framework.po.flow.Model(model.getId(),deployment.getId()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        modelService.publicModel(id);
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
