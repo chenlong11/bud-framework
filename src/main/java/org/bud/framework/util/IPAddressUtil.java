@@ -14,7 +14,7 @@ public class IPAddressUtil {
      * @param request
      * @return
      */
-    public static String getHost(HttpServletRequest request) {
+    public static String getIpAddr(HttpServletRequest request) {
         if (request == null) {
             return "unknown";
         }
@@ -37,5 +37,6 @@ public class IPAddressUtil {
         }
         return ip;
     }
+
 
 }

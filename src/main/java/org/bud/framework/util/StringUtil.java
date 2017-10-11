@@ -1,11 +1,7 @@
 package org.bud.framework.util;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
 import com.google.common.base.Optional;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.Map;
 
 /**
  * Created by chenlong
