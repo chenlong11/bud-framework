@@ -6,6 +6,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -30,31 +31,39 @@ public class HttpUtil {
 
     private static final String USER_AGENT = "Mozilla/5.0";
 
-    public static String doPost(String url, Map<String, String> params) throws IOException {
+    public static String doPost(String url, Object argument, Map<String, String> header) throws IOException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
-        httpPost.addHeader("User-Agent", USER_AGENT);
-
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        if (null!=params){
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                urlParameters.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+        //请求报文头
+        if (null != header) {
+            for (Map.Entry<String, String> entry : header.entrySet()) {
+                httpPost.addHeader(entry.getKey(), entry.getValue());
+            }
+        }
+        //封装参数
+        if(argument instanceof Map){
+            List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+            if (null!=argument){
+                for (Map.Entry<String, String> entry : ((Map<String,String>)argument).entrySet()) {
+                    urlParameters.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+                }
+            }
+            HttpEntity postParams = new UrlEncodedFormEntity(urlParameters);
+            httpPost.setEntity(postParams);
+        } else if (argument instanceof String) {
+            if (argument != null) {
+                StringEntity stringEntity = new StringEntity((String)argument);
+                stringEntity.setContentEncoding("UTF-8");
+                httpPost.setEntity(stringEntity);
             }
         }
 
-
-        HttpEntity postParams = new UrlEncodedFormEntity(urlParameters);
-        httpPost.setEntity(postParams);
-
         CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
-
         logger.info("POST Response Status: " + httpResponse.getStatusLine().getStatusCode());
-
         BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
 
         String inputLine;
         StringBuffer response = new StringBuffer();
-
         while ((inputLine = reader.readLine()) != null) {
             response.append(inputLine);
         }
@@ -96,8 +105,5 @@ public class HttpUtil {
         logger.info("response content: " + response.toString());
         return response.toString();
     }
-
-
-
 
 }

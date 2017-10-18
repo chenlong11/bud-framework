@@ -48,15 +48,23 @@ public class IdGenerateUtil {
      * 生成固定位数随机数
      * @return
      */
-    private static String getFixLenthRandom(int strLength) {
-        strLength += 1;
-        Random rm = new Random();
-        // 获得随机数
-        double pross = (1 + rm.nextDouble()) * Math.pow(10, strLength);
-        // 将获得的获得随机数转化为字符串
-        String fixLenthString = String.valueOf(pross);
-        // 返回固定的长度的随机数
-        return fixLenthString.substring(2, strLength + 1);
+    private static String getFixLenthRandom(int length) {
+        //35是因为数组是从0开始的，26个字母+10个数字
+        final int maxNum = 36;
+        int i; //生成的随机数
+        int count = 0; //生成的密码的长度
+        char[] str = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        StringBuffer pwd = new StringBuffer("");
+        Random r = new Random();
+        while(count < length){
+            //生成随机数，取绝对值，防止生成负数，
+            i = Math.abs(r.nextInt(maxNum)); //生成的数最大为36-1
+            if (i >= 0 && i < str.length) {
+                pwd.append(str[i]);
+                count ++;
+            }
+        }
+        return pwd.toString();
     }
 
 }
