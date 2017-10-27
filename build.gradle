@@ -76,6 +76,9 @@ dependencies {
 	//compile  "org.flowable:flowable-bpmn-model:${flowableVersion}"
 	//compile "org.flowable:flowable-engine:${flowableVersion}"
 
+	//compile 'org.springframework.batch:spring-batch-core:3.0.8.RELEASE'
+	// tools
+	compile 'commons-beanutils:commons-beanutils:1.9.3'
 	compile 'org.apache.httpcomponents:httpclient:4.5.2'
 
 	// Runtime dependencies.

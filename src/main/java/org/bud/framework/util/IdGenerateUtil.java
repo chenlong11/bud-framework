@@ -48,7 +48,7 @@ public class IdGenerateUtil {
      * 生成固定位数随机数
      * @return
      */
-    private static String getFixLenthRandom(int length) {
+    public static String getFixLenthRandom(int length) {
         //35是因为数组是从0开始的，26个字母+10个数字
         final int maxNum = 36;
         int i; //生成的随机数
