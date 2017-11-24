@@ -22,17 +22,9 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
 version = '0.0.1-SNAPSHOT'
+
 sourceCompatibility = 1.8
-
-compileJava {
-	sourceCompatibility = 1.6
-	targetCompatibility = 1.6
-}
-
-compileTestJava {
-	sourceCompatibility = 1.6
-	targetCompatibility = 1.6
-}
+targetCompatibility = 1.8
 
 ext {
 	jsonPathVersion = '2.0.0'
