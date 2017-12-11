@@ -50,7 +50,8 @@ public class WebMvcConfigure extends WebMvcConfigurerAdapter {
                 SerializerFeature.WriteNullStringAsEmpty,
                 SerializerFeature.WriteNullNumberAsZero,
                 SerializerFeature.WriteNullBooleanAsFalse,
-                SerializerFeature.WriteNullListAsEmpty);
+                SerializerFeature.WriteNullListAsEmpty,
+                SerializerFeature.DisableCircularReferenceDetect);
         fastJsonConfig.setCharset(Charset.forName("UTF-8"));
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
 
