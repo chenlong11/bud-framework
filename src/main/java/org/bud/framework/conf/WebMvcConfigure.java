@@ -52,7 +52,7 @@ public class WebMvcConfigure extends WebMvcConfigurerAdapter {
                 SerializerFeature.WriteNullBooleanAsFalse,
                 SerializerFeature.WriteNullListAsEmpty,
                 SerializerFeature.DisableCircularReferenceDetect);
-        fastJsonConfig.setCharset(Charset.forName("UTF-8"));
+//        fastJsonConfig.setCharset(Charset.forName("UTF-8"));
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
 
         List<MediaType> supportedMediaTypes = new ArrayList<MediaType>();
@@ -65,8 +65,8 @@ public class WebMvcConfigure extends WebMvcConfigurerAdapter {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        super.configureMessageConverters(converters);
         converters.add(this.fastJsonHttpMessageConverters());
+        super.configureMessageConverters(converters);
     }
 
 
