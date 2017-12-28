@@ -3,7 +3,7 @@
     <!-- 文件输出格式 -->
     <property name="PATTERN" value="%-12(%d{yyyy-MM-dd HH:mm:ss.SSS}) |-%-5level [%thread] %c [%L] -| %msg%n" />
     <!-- 日志文件路径 -->
-    <property name="FILE_PATH" value="/logs" />
+    <property name="FILE_PATH" value="${user.dir}/logs" />
 
     <logger name="org.bud.framework.repository" level="DEBUG"/>
     <logger name="org.flowable.engine.impl.persistence.entity" level="DEBUG"/>
@@ -25,6 +25,12 @@
 
     <!-- 生产环境 -->
     <springProfile name="prod">
+
+        <appender name="PROD_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>${PATTERN}</pattern>
+            </encoder>
+        </appender>
 
         <!-- 时间滚动输出 level为 INFO 日志 -->
         <appender name="PROD_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -71,6 +77,7 @@
         </appender>
 
         <root level="info">
+            <appender-ref ref="PROD_CONSOLE" />
             <appender-ref ref="PROD_INFO" />
             <appender-ref ref="PROD_ERROR" />
         </root>
