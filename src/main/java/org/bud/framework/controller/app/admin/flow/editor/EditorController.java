@@ -49,7 +49,7 @@ public class EditorController {
     @RequestMapping(value = "/{modelId}/json", method = RequestMethod.GET,produces = "application/json")
     @ResponseBody
     public ObjectNode getModelJSON(@PathVariable String modelId) {
-        org.bud.framework.po.flow.Model model = modelService.getModel(modelId);
+        org.bud.framework.domain.flow.Model model = modelService.getModel(modelId);
         ObjectNode modelNode = objectMapper.createObjectNode();
         modelNode.put("modelId", model.getId());
         modelNode.put("name", model.getName());
@@ -82,7 +82,7 @@ public class EditorController {
 
     @RequestMapping(value = "/{modelId}/json", method = RequestMethod.POST,produces = "application/json")
     @ResponseBody
-    public ResponseEntity updateModel(@PathVariable String modelId, org.bud.framework.po.flow.Model model) {
+    public ResponseEntity updateModel(@PathVariable String modelId, org.bud.framework.domain.flow.Model model) {
         try {
             modelService.saveModel(model);
             return new ResponseEntity(HttpStatus.NO_CONTENT);

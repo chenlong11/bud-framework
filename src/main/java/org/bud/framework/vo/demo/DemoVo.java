@@ -1,7 +1,7 @@
 package org.bud.framework.vo.demo;
 
 import lombok.Data;
-import org.bud.framework.po.demo.Demo;
+import org.bud.framework.domain.demo.Demo;
 
 /**
  * Created by chenlong

@@ -48,6 +48,8 @@ spring:
       max-pool-prepared-statement-per-connection-size: 20
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+#  mvc:
+#    static-path-pattern: /static/**
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: org.bud.framework.repository
@@ -60,6 +62,7 @@ pagehelper:
   params: count=countSql
 flowable:
   check-process-definitions: false
+
 
 
 

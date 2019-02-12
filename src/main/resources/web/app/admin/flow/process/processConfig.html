@@ -78,17 +78,30 @@
                                 <small>${item.name}</small>
                             </h2>
 
+                            <div class="form-group task-pri-type">
+                                <label class="col-sm-2 control-label">节点权限</label>
+                                <label class="col-sm-10 control-label">
+                                    <select name="taskPriType" class="form-control">
+                                        <option value="1">人员</option>
+                                        <option value="2">角色</option>
+                                    </select>
+                                </label>
+                            </div>
+
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">节点人员</label>
+                                <label class="col-sm-2 control-label">&nbsp;</label>
                                 <label class="col-sm-3">
-                                    <button type="button" class="btn btn-block btn-default"><i class="fa fa-fw fa-user"></i> 选择</button>
+                                    <button type="button" class="btn btn-block btn-default"><i class="fa fa-fw fa-user"></i>选择</button>
                                 </label>
                                 <label class="col-sm-7">&nbsp;</label>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">&nbsp;</label>
-                                <div class="col-sm-10 pull-left">暂未选择.</div>
+                                <label class="col-sm-2 control-label">已选择</label>
+                                <label class="col-sm-10 control-label">
+                                    <input name="taskPri" type="text" class="form-control" placeholder="">
+                                </label>
+                                <!--<div class="col-sm-10 pull-left">暂未选择.</div>-->
                             </div>
                             [/#list]
                         </div>
@@ -121,7 +134,7 @@
 </div>
 
 <div class="box-footer">
-    <button type="submit" class="btn btn-primary pull-right">保&nbsp;&nbsp;存</button>
+    <button onclick="saveProcessConf()" type="submit" class="btn btn-primary pull-right">保&nbsp;&nbsp;存</button>
 </div>
 
 [#include "/include/includeJs.html"/]
@@ -144,6 +157,25 @@
         });
     })
 
+    //获取节点权限设置
+    function getTaskPris() {
+        var pris = [];
+        $('.task-pri-type select[name=taskPriType]').each(function () {
+            var taskPriType = $(this).val();
+            var taskPri = $(this).closest('div').next('').next().find('input[name=taskPri]').val();
+            console.log('taskPri', taskPri);
+            let obj = {};
+            obj['taskPriType'] = taskPriType;
+            obj['taskPri'] = taskPri;
+            pris.push(obj);
+        })
+        return pris;
+    }
+
+    function saveProcessConf() {
+        var pris = getTaskPris();
+
+    }
 </script>
 
 </body>

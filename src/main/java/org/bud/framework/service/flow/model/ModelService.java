@@ -1,9 +1,9 @@
 package org.bud.framework.service.flow.model;
 
-import org.bud.framework.po.flow.Model;
-import org.bud.framework.po.flow.ModelKeyRepresentation;
-import org.bud.framework.po.flow.ModelRepresentation;
-import org.bud.framework.po.system.User;
+import org.bud.framework.domain.flow.Model;
+import org.bud.framework.domain.flow.ModelKeyRepresentation;
+import org.bud.framework.domain.flow.ModelRepresentation;
+import org.bud.framework.domain.system.User;
 import org.bud.framework.vo.flow.ModelVo;
 
 import java.util.List;

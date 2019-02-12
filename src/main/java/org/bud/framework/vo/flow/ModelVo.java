@@ -1,7 +1,7 @@
 package org.bud.framework.vo.flow;
 
 import lombok.Data;
-import org.bud.framework.po.flow.Model;
+import org.bud.framework.domain.flow.Model;
 
 /**
  * Created by chenlong

@@ -13,7 +13,7 @@
 package org.bud.framework.service.flow.model;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.bud.framework.po.flow.Model;
+import org.bud.framework.domain.flow.Model;
 import org.bud.framework.util.flow.ImageGenerator;
 import org.flowable.bpmn.model.*;
 import org.flowable.bpmn.model.Process;

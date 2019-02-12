@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.bud.framework.exception.InternalServerErrorException;
-import org.bud.framework.po.flow.*;
-import org.bud.framework.po.system.User;
-import org.bud.framework.repository.flow.ModelRelationRepository;
-import org.bud.framework.repository.flow.ModelRepository;
+import org.bud.framework.domain.flow.*;
+import org.bud.framework.domain.system.User;
+import org.bud.framework.mapper.flow.ModelRelationMapper;
+import org.bud.framework.mapper.flow.ModelMapper;
 import org.bud.framework.util.StringUtil;
 import org.bud.framework.util.WebUtil;
 import org.bud.framework.vo.flow.ModelVo;
@@ -36,10 +36,10 @@ public class ModelServiceImpl implements ModelService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModelServiceImpl.class);
 
     @Autowired
-    protected ModelRepository modelRepository;
+    protected ModelMapper modelMapper;
 
     @Autowired
-    protected ModelRelationRepository modelRelationRepository;
+    protected ModelRelationMapper modelRelationMapper;
 
     @Autowired
     protected ObjectMapper objectMapper;
@@ -58,7 +58,7 @@ public class ModelServiceImpl implements ModelService {
         modelVo.setKey(key);
         modelVo.setModelType(modelType);
 
-        List<ModelVo> models = modelRepository.getByParameters(modelVo);
+        List<ModelVo> models = modelMapper.getByParameters(modelVo);
         for (Model modelInfo : models) {
             if (model == null || !modelInfo.getId().equals(model.getId())) {
                 modelKeyResponse.setKeyAlreadyExists(true);
@@ -152,7 +152,7 @@ public class ModelServiceImpl implements ModelService {
                     model.setThumbnail(thumbnail);
                 }
 
-                modelRepository.save(model);
+                modelMapper.save(model);
 
                 // Relations
                 handleBpmnProcessFormModelRelations(model, jsonNode);
@@ -160,7 +160,7 @@ public class ModelServiceImpl implements ModelService {
 
             }
         }else {
-            modelRepository.save(model);
+            modelMapper.save(model);
         }
 
         return model;
@@ -184,12 +184,12 @@ public class ModelServiceImpl implements ModelService {
     protected void handleModelRelations(AbstractModel bpmnProcessModel, Set<String> idsReferencedInJson, String relationshipType) {
 
         // Find existing persisted relations
-        List<ModelRelation> persistedModelRelations = modelRelationRepository.findByParentModelIdAndType(bpmnProcessModel.getId(), relationshipType);
+        List<ModelRelation> persistedModelRelations = modelRelationMapper.findByParentModelIdAndType(bpmnProcessModel.getId(), relationshipType);
 
         // if no ids referenced now, just delete them all
         if (idsReferencedInJson == null || idsReferencedInJson.size() == 0) {
             for (ModelRelation modelRelation : persistedModelRelations) {
-                modelRelationRepository.delete(modelRelation);
+                modelRelationMapper.delete(modelRelation);
             }
             return;
         }
@@ -198,7 +198,7 @@ public class ModelServiceImpl implements ModelService {
         for (ModelRelation persistedModelRelation : persistedModelRelations) {
             if (!idsReferencedInJson.contains(persistedModelRelation.getModelId())) {
                 // model used to be referenced, but not anymore. Delete it.
-                modelRelationRepository.delete(persistedModelRelation);
+                modelRelationMapper.delete(persistedModelRelation);
             } else {
                 alreadyPersistedModelIds.add(persistedModelRelation.getModelId());
             }
@@ -211,8 +211,8 @@ public class ModelServiceImpl implements ModelService {
             if (!alreadyPersistedModelIds.contains(idReferencedInJson)) {
 
                 // Check if model actually still exists. Don't create the relationship if it doesn't exist. The client UI will have cope with this too.
-                if (modelRepository.get(idReferencedInJson) != null) {
-                    modelRelationRepository.save(new ModelRelation(bpmnProcessModel.getId(), idReferencedInJson, relationshipType));
+                if (modelMapper.get(idReferencedInJson) != null) {
+                    modelRelationMapper.save(new ModelRelation(bpmnProcessModel.getId(), idReferencedInJson, relationshipType));
                 }
             }
         }
@@ -220,17 +220,17 @@ public class ModelServiceImpl implements ModelService {
 
     @Override
     public List<ModelVo> getModelsByParameters(ModelVo modelVo) {
-        return modelRepository.getByParameters(modelVo);
+        return modelMapper.getByParameters(modelVo);
     }
 
     @Override
     public void delModelById(String id) {
-        modelRepository.delete(id);
+        modelMapper.delete(id);
     }
 
     @Override
     public Model getModel(String modelId) {
-        return modelRepository.get(modelId);
+        return modelMapper.get(modelId);
     }
 
     @Override
@@ -244,7 +244,7 @@ public class ModelServiceImpl implements ModelService {
     @Override
     public void publicModel(String id) {
         try {
-            org.bud.framework.po.flow.Model model = getModel(id);
+            org.bud.framework.domain.flow.Model model = getModel(id);
             ObjectNode modelNode = (ObjectNode) new ObjectMapper().readTree(model.getModelEditorJson());
             byte[] bpmnBytes = null;
 
@@ -258,7 +258,7 @@ public class ModelServiceImpl implements ModelService {
 
             String processDefId = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).singleResult().getId();
             //回填model processDefId
-            saveModel(new org.bud.framework.po.flow.Model(model.getId(), deployment.getId(), processDefId));
+            saveModel(new org.bud.framework.domain.flow.Model(model.getId(), deployment.getId(), processDefId));
         } catch (Exception e) {
             e.printStackTrace();
         }

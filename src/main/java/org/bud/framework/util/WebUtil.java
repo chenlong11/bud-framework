@@ -1,7 +1,7 @@
 package org.bud.framework.util;
 
 import org.bud.framework.constants.AppConstants;
-import org.bud.framework.po.system.User;
+import org.bud.framework.domain.system.User;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
