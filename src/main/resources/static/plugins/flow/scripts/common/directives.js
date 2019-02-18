@@ -1187,16 +1187,14 @@ flowableModule.directive('editInPlace', function () {
  * Use this method vs the default $modal({myJson}) approach
  */
 var _internalCreateModal = function(modalConfig, $modal, $scope) {
-
     if ($scope !== null && $scope !== undefined) {
-        $scope.modal = $modal(modalConfig);
 
+        $scope.modal = $modal(modalConfig);
         $scope.$on('$routeChangeStart', function () {
             if ($scope.modal) {
                 $scope.modal.hide();
             }
         });
-
         return $scope.modal;
     } else {
         return $modal(modalConfig);

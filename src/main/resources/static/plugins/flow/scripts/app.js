@@ -11,7 +11,6 @@
  * limitations under the License.
  */
 'use strict';
-
 var flowableModeler = angular.module('flowableModeler', [
     'ngCookies',
     'ngResource',
@@ -34,7 +33,6 @@ var flowableModeler = angular.module('flowableModeler', [
     'dndLists',
     'ngHandsontable'
 ]);
-
 
 flowableModeler.factory("editorManager", ["$http", function ($http) {
     var editorManager = Class.create({
@@ -486,7 +484,6 @@ flowableModeler
 
             /* Helper method to fetch model from server (always needed) */
             function fetchModel() {
-
                 var modelId = "cc1a8b16-8de8-11e7-b39a-be8385e23d57";
                 var modelUrl = FLOWABLE.URL.getModel(modelId);
                 $http({

@@ -499,7 +499,6 @@ angular.module('flowableModeler')
                         var showValidationDialog = function () {
                             $rootScope.currentValidationId = event.validationId;
                             $rootScope.isOnProcessLevel = event.onProcessLevel;
-
                             _internalCreateModal({
                                 template: 'editor-app/popups/validation-errors.html?version=' + Date.now()
                             }, $modal, $rootScope);

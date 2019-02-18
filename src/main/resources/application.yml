@@ -1,4 +1,7 @@
 spring:
+  resources:
+    cache-period: 0
+    static-locations: classpath:/static/
   profiles:
       active: dev
   http:

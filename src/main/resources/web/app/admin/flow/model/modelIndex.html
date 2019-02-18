@@ -125,9 +125,10 @@
     }
 
     function edit() {
+        var r = Math.random();
         var id = getSelectId();
         if (id) {
-            $("#constainer_dialog").load('${base}/app/admin/flow/model/'+id+'/edit', function () {
+            $("#constainer_dialog").load('${base}/app/admin/flow/model/'+id+'/edit?r='+r, function () {
                 $('#editModal').modal('show');
             });
         }else{
