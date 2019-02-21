@@ -65,9 +65,6 @@ pagehelper:
   params: count=countSql
 flowable:
   check-process-definitions: false
-
-
-
-
-
-
+  database-schema-update: false
+server:
+  context-path:

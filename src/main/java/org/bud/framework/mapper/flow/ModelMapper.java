@@ -24,7 +24,7 @@ public interface ModelMapper {
     void delete(String id);
 
     @Select({" select id,name,model_key 'key',description,model_comment comment,created,created_by createdBy,last_updated lastUpdated," +
-            " last_updated_by lastUpdatedBy,version,model_editor_json modelEditorJson,model_type modelType,thumbnail " +
+            " last_updated_by lastUpdatedBy,version,model_editor_json modelEditorJson,model_type modelType,thumbnail,proc_def_key processDefKey " +
             " from ACT_DE_MODEL where id = #{id} "})
     Model get(String id);
 

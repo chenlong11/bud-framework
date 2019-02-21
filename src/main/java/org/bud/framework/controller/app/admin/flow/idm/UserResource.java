@@ -28,12 +28,13 @@ import javax.servlet.http.HttpServletResponse;
  * REST controller for managing users.
  */
 @RestController
+@RequestMapping("/app/admin/flow")
 public class UserResource {
 
     @Autowired
     protected RemoteIdmService remoteIdmService;
 
-    @RequestMapping(value = "/app/admin/flow/users/{userId}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/users/{userId}", method = RequestMethod.GET, produces = "application/json")
     public UserRepresentation getUser(@PathVariable String userId, HttpServletResponse response) {
         User user = remoteIdmService.getUser(userId);
 

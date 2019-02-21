@@ -12,9 +12,6 @@
  */
 package org.bud.framework.controller.app.admin.flow.idm;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bud.framework.domain.flow.GroupRepresentation;
 import org.bud.framework.domain.flow.ResultListDataRepresentation;
 import org.bud.framework.service.flow.idm.RemoteIdmService;
@@ -25,13 +22,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
+@RequestMapping("/app/admin/flow")
 public class WorkflowGroupsResource {
 
     @Autowired
     private RemoteIdmService remoteIdmService;
 
-    @RequestMapping(value = "/app/admin/flow/workflow-groups", method = RequestMethod.GET)
+    @RequestMapping(value = "/workflow-groups", method = RequestMethod.GET)
     public ResultListDataRepresentation getGroups(@RequestParam(value = "filter", required = false) String filter) {
 
         List<? extends Group> matchingGroups = remoteIdmService.findGroupsByNameFilter(filter);

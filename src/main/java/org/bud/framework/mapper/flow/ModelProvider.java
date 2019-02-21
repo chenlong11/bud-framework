@@ -97,6 +97,10 @@ public class ModelProvider {
             builder.append(" ,proc_def_id = #{processDefId}  ");
         }
 
+        if(StringUtil.isNotNull(model.getProcessDefKey())){
+            builder.append(" ,proc_def_key = #{processDefKey}  ");
+        }
+
         builder.append(" where id = #{id} ");
 
         return builder.toString();
@@ -107,7 +111,7 @@ public class ModelProvider {
 
         StringBuilder builder = new StringBuilder();
         builder.append(" select a.id,a.name,a.model_key 'key',a.description,a.model_comment comment,a.created,a.created_by createdBy,a.last_updated lastUpdated, " +
-                " a.last_updated_by lastUpdatedBy,a.version,a.model_editor_json modelEditorJson,a.model_type modelType,a.thumbnail,a.deploy_id deploymentId " +
+                " a.last_updated_by lastUpdatedBy,a.version,a.model_editor_json modelEditorJson,a.model_type modelType,a.thumbnail,a.deploy_id deploymentId,proc_def_key processDefKey " +
                 " from ACT_DE_MODEL a  where 1=1 ");
 
         if(StringUtil.isNotEmpty(modelVo.getModelType())){

@@ -4,20 +4,23 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.bud.framework.exception.InternalServerErrorException;
+import org.apache.commons.lang3.StringUtils;
 import org.bud.framework.domain.flow.*;
 import org.bud.framework.domain.system.User;
-import org.bud.framework.mapper.flow.ModelRelationMapper;
+import org.bud.framework.exception.InternalServerErrorException;
 import org.bud.framework.mapper.flow.ModelMapper;
+import org.bud.framework.mapper.flow.ModelRelationMapper;
 import org.bud.framework.util.StringUtil;
 import org.bud.framework.util.WebUtil;
 import org.bud.framework.vo.flow.ModelVo;
 import org.flowable.bpmn.converter.BpmnXMLConverter;
-import org.flowable.bpmn.model.BpmnModel;
+import org.flowable.bpmn.model.*;
+import org.flowable.bpmn.model.Process;
 import org.flowable.editor.language.json.converter.BpmnJsonConverter;
 import org.flowable.editor.language.json.converter.util.JsonConverterUtil;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.repository.Deployment;
+import org.flowable.engine.repository.ProcessDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,7 +138,6 @@ public class ModelServiceImpl implements ModelService {
     protected Model persistModel(Model model) {
 
         if (StringUtil.isNotEmpty(model.getModelEditorJson())) {
-            // Parse json to java
             ObjectNode jsonNode = null;
             try {
                 jsonNode = (ObjectNode) objectMapper.readTree(model.getModelEditorJson());
@@ -246,21 +248,63 @@ public class ModelServiceImpl implements ModelService {
         try {
             org.bud.framework.domain.flow.Model model = getModel(id);
             ObjectNode modelNode = (ObjectNode) new ObjectMapper().readTree(model.getModelEditorJson());
-            byte[] bpmnBytes = null;
-
             BpmnModel bpmnModel = new BpmnJsonConverter().convertToBpmnModel(modelNode);
-            bpmnBytes = new BpmnXMLConverter().convertToXML(bpmnModel);
+            Map<String, StartEvent> startEventMap = processNoneStartEvents(bpmnModel);
+            for (Process process : bpmnModel.getProcesses()) {
+                processUserTasks(process.getFlowElements(), process, startEventMap);
+            }
+            byte[] bpmnBytes = new BpmnXMLConverter().convertToXML(bpmnModel);
             String processName = model.getName() + ".bpmn20.xml";
             Deployment deployment = repositoryService.createDeployment()
                     .name(model.getName())
                     .addString(processName, new String(bpmnBytes))
                     .deploy();
 
-            String processDefId = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).singleResult().getId();
-            //回填model processDefId
-            saveModel(new org.bud.framework.domain.flow.Model(model.getId(), deployment.getId(), processDefId));
+            ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).singleResult();
+
+            //回填model processDefId 及 key
+            saveModel(new org.bud.framework.domain.flow.Model(
+                    model.getId(),
+                    deployment.getId(),
+                    processDefinition.getId(),
+                    processDefinition.getKey()));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    protected Map<String, StartEvent> processNoneStartEvents(BpmnModel bpmnModel) {
+        Map<String, StartEvent> startEventMap = new HashMap<>();
+        for (Process process : bpmnModel.getProcesses()) {
+            for (FlowElement flowElement : process.getFlowElements()) {
+                if (flowElement instanceof StartEvent) {
+                    StartEvent startEvent = (StartEvent) flowElement;
+                    if (org.apache.commons.collections.CollectionUtils.isEmpty(startEvent.getEventDefinitions())) {
+                        if (StringUtils.isEmpty(startEvent.getInitiator())) {
+                            startEvent.setInitiator("initiator");
+                        }
+                        startEventMap.put(process.getId(), startEvent);
+                        break;
+                    }
+                }
+            }
+        }
+        return startEventMap;
+    }
+
+    protected void processUserTasks(Collection<FlowElement> flowElements, Process process, Map<String, StartEvent> startEventMap) {
+        for (FlowElement flowElement : flowElements) {
+            if (flowElement instanceof UserTask) {
+                UserTask userTask = (UserTask) flowElement;
+                if ("$INITIATOR".equals(userTask.getAssignee())) {
+                    if (startEventMap.get(process.getId()) != null) {
+                        userTask.setAssignee("${" + startEventMap.get(process.getId()).getInitiator() + "}");
+                    }
+                }
+            } else if (flowElement instanceof SubProcess) {
+                processUserTasks(((SubProcess) flowElement).getFlowElements(), process, startEventMap);
+            }
+        }
+    }
+
 }

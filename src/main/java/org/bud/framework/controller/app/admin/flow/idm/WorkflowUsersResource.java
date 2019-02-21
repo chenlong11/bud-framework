@@ -31,6 +31,7 @@ import java.util.*;
  * Rest resource for managing users, specifically related to tasks and processes.
  */
 @RestController
+@RequestMapping("/app/admin/flow")
 public class WorkflowUsersResource {
 
     @Autowired
@@ -42,7 +43,7 @@ public class WorkflowUsersResource {
     @Autowired
     private TaskService taskService;
 
-    @RequestMapping(value = "/app/admin/flow/workflow-users", method = RequestMethod.GET)
+    @RequestMapping(value = "/workflow-users", method = RequestMethod.GET)
     public ResultListDataRepresentation getUsers(@RequestParam(value = "filter", required = false) String filter,
                                                  @RequestParam(value = "excludeTaskId", required = false) String excludeTaskId,
                                                  @RequestParam(value = "excludeProcessId", required = false) String excludeProcessId) {

@@ -12,8 +12,6 @@
  */
 package org.bud.framework.controller.app.admin.flow.idm;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.bud.framework.domain.flow.GroupRepresentation;
 import org.bud.framework.service.flow.exception.NotFoundException;
 import org.bud.framework.service.flow.idm.RemoteIdmService;
@@ -24,13 +22,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
+@RequestMapping("/app/admin/flow")
 public class WorkflowGroupResource {
 
     @Autowired
     private RemoteIdmService remoteIdmService;
 
-    @RequestMapping(value = "/app/admin/flow/workflow-groups/{groupId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/workflow-groups/{groupId}", method = RequestMethod.GET)
     public GroupRepresentation getGroup(@PathVariable String groupId, HttpServletResponse response) {
         Group group = remoteIdmService.getGroup(groupId);
 

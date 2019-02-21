@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/app/admin/flow")
 public class ApiUsersResource {
 
     @Autowired

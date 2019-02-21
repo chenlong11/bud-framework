@@ -30,4 +30,6 @@ public interface ModelService {
     void saveModel(Model model);
 
     void publicModel(String id);
+
+
 }

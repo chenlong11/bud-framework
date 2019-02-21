@@ -95,7 +95,8 @@
                         render: function (data, type, row, meta) {
                             //隐藏
                             var input = '<input type="hidden" id="id" value="' + row.id + '"/>' +
-                                '<input type="hidden" id="deploymentId" value="' + row.deploymentId + '"/>' ;
+                                '<input type="hidden" id="deploymentId" value="' + row.deploymentId + '"/>' +
+                                '<input type="hidden" id="processDefKey" value="' + row.processDefKey + '"/>';
                             // 显示行号
                             var startIndex = meta.settings._iDisplayStart + meta.row + 1;
                             return startIndex + input;
@@ -187,6 +188,10 @@
         return $('#myTable tr.selected #deploymentId').val();
     }
 
+    function getProcessDefKey() {
+        return $('#myTable tr.selected #processDefKey').val();
+    }
+
     function config() {
         var deploymentId = getdeploymentId();
         if(deploymentId){
@@ -203,9 +208,11 @@
     }
 
     function start() {
-        var deploymentId = getdeploymentId();
-        if(deploymentId){
-            layerAlert('功能开发中');
+        var processDefKey = getProcessDefKey();
+        if(processDefKey){
+            $.get('/app/admin/flow/process/'+processDefKey+'/start',{},function () {
+                layerAlert('启动成功');
+            })
         } else {
             layerAlert('请先发布流程');
         }

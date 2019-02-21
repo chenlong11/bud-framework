@@ -1,5 +1,6 @@
 package org.bud.framework.service.flow.process;
 
+import org.bud.framework.domain.flow.TaskRepresentation;
 import org.flowable.bpmn.model.FlowElement;
 
 import java.io.InputStream;
@@ -16,5 +17,15 @@ public interface ProcessService {
 
     List<FlowElement> getFlowElementsByDeploymentId(String deploymentId);
 
-    void startFlow(String deploymentId, String businessId);
+    boolean startFlow(String processDefKey, String businessId, String userId);
+
+    List<TaskRepresentation> getCandidateTasks(String userId);
+
+    List<TaskRepresentation> getAssigneeTasks(String userId);
+
+    boolean claimTask(String taskId, String userId);
+
+    List<FlowElement> getNextNodes(String taskId);
+
+    boolean toNext(String taskId);
 }
