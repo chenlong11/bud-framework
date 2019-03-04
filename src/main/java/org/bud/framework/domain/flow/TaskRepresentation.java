@@ -9,5 +9,6 @@ public class TaskRepresentation {
 
     private String id;
     private String name;
+    private String procInstId;
 
 }

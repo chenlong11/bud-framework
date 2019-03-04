@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/app/admin/flow/groups")
@@ -21,12 +23,14 @@ public class GroupController {
     private GroupService groupService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<GroupRepresentation> getGroups(@RequestParam(required = false) String filter) {
+    public Map getGroups(@RequestParam(required = false) String filter) {
         List<GroupRepresentation> result = new ArrayList<GroupRepresentation>();
         for (Group group : groupService.getGroups(filter)) {
             result.add(new GroupRepresentation(group));
         }
-        return result;
+        Map data = new HashMap();
+        data.put("data", result);
+        return data;
     }
 
     @RequestMapping(value = "/{groupId}", method = RequestMethod.GET)

@@ -107,4 +107,10 @@ public class ProcessController {
         return processService.toNext(taskId);
     }
 
+    @RequestMapping(value = "/{procInstId}/getBusinessKey",method = RequestMethod.GET)
+    @ResponseBody
+    public String getBusinessKey(@PathVariable String procInstId){
+        return processService.getBusinessKey(procInstId);
+    }
+
 }

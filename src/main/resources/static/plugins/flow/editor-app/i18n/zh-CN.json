@@ -738,7 +738,7 @@
     "PROPERTY.FORMREFERENCE.FORM.EMPTY" : "This folder contains no forms",
 
     "PROPERTY.TASKLISTENERS.VALUE" : "{{length}} task listeners",
-    "PROPERTY.TASKLISTENERS.EMPTY" : "No task listeners configured",
+    "PROPERTY.TASKLISTENERS.EMPTY" : "未配置监听器",
     "PROPERTY.TASKLISTENERS.EVENT" : "Event",
     "PROPERTY.TASKLISTENERS.CLASS" : "Class",
     "PROPERTY.TASKLISTENERS.CLASS.PLACEHOLDER" : "Enter a classname",

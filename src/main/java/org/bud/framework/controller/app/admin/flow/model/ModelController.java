@@ -2,7 +2,7 @@ package org.bud.framework.controller.app.admin.flow.model;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.bud.framework.exception.BadRequestException;
+import org.bud.framework.service.flow.exception.BadRequestException;
 import org.bud.framework.domain.flow.ModelKeyRepresentation;
 import org.bud.framework.domain.flow.ModelRepresentation;
 import org.bud.framework.domain.system.User;

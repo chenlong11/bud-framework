@@ -12,8 +12,6 @@
  */
 package org.bud.framework.service.flow.exception;
 
-import org.bud.framework.exception.BaseModelerRestException;
-
 /**
  * @author jbarrez
  */

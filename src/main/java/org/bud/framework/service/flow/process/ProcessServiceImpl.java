@@ -8,12 +8,17 @@ import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.impl.persistence.entity.ExecutionEntity;
 import org.flowable.engine.repository.ProcessDefinition;
+import org.flowable.idm.api.Group;
+import org.flowable.idm.api.IdmIdentityService;
 import org.flowable.task.api.Task;
+import org.flowable.task.api.TaskQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by chenlong
@@ -31,6 +36,10 @@ public class ProcessServiceImpl implements ProcessService {
 
     @Autowired
     private TaskService taskService;
+
+    @Autowired
+    private IdmIdentityService idmIdentityService;
+
 
     @Override
     public InputStream getProcessImageView(String deploymentId) {
@@ -57,29 +66,38 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public boolean startFlow(String processDefKey, String businessId, String userId) {
+    public boolean startFlow(String processDefKey, String businessKey, String userId) {
         try {
-            Map<String, Object> variables = new HashMap<String, Object>();
-            variables.put("businessId", businessId);
             Authentication.setAuthenticatedUserId(userId);
-            runtimeService.startProcessInstanceByKey(processDefKey, variables);
+            runtimeService.startProcessInstanceByKey(processDefKey, businessKey);
             Authentication.setAuthenticatedUserId(null);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
         return true;
-
     }
 
     @Override
     public List<TaskRepresentation> getCandidateTasks(String userId) {
-        List<TaskRepresentation> dtos = new ArrayList<TaskRepresentation>();
-        List<Task> tasks = taskService.createTaskQuery().taskCandidateUser(userId).list();
-        for (Task task : tasks) {
-            dtos.add(new TaskRepresentation(task.getId(), task.getName()));
+
+        List<String> groupStrs = new ArrayList<String>();
+        List<Group> groups = idmIdentityService.createGroupQuery().groupMember(userId).list();
+        for (Group group : groups) {
+            groupStrs.add(group.getId());
         }
-        return dtos;
+
+        TaskQuery taskQuery = taskService.createTaskQuery().taskCandidateUser(userId);
+        if(!groupStrs.isEmpty()){
+            taskQuery.taskCandidateGroupIn(groupStrs);
+        }
+
+        List<TaskRepresentation> taskDtos = new ArrayList<TaskRepresentation>();
+        List<Task> tasks = taskQuery.list();
+        for (Task task : tasks) {
+            taskDtos.add(new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId()));
+        }
+        return taskDtos;
     }
 
     @Override
@@ -87,7 +105,7 @@ public class ProcessServiceImpl implements ProcessService {
         List<TaskRepresentation> dtos = new ArrayList<TaskRepresentation>();
         List<Task> tasks = taskService.createTaskQuery().taskAssignee(userId).list();
         for (Task task : tasks) {
-            dtos.add(new TaskRepresentation(task.getId(), task.getName()));
+            dtos.add(new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId()));
         }
         return dtos;
     }
@@ -127,9 +145,23 @@ public class ProcessServiceImpl implements ProcessService {
         try {
             taskService.complete(taskId);
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
         return true;
+    }
+
+    @Override
+    public boolean toNext(String taskId, String userId) {
+        return false;
+    }
+
+    @Override
+    public String getBusinessKey(String processInstId) {
+        return runtimeService.createProcessInstanceQuery()
+                .processInstanceId(processInstId)
+                .singleResult()
+                .getBusinessKey();
     }
 
 }

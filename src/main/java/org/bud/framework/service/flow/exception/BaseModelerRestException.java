@@ -1,4 +1,4 @@
-package org.bud.framework.exception;
+package org.bud.framework.service.flow.exception;
 
 import java.util.HashMap;
 import java.util.Map;

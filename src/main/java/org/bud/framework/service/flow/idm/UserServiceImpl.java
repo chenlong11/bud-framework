@@ -14,7 +14,7 @@ package org.bud.framework.service.flow.idm;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bud.framework.domain.flow.UserInformation;
-import org.bud.framework.exception.BadRequestException;
+import org.bud.framework.service.flow.exception.BadRequestException;
 import org.bud.framework.service.flow.exception.ConflictingRequestException;
 import org.bud.framework.service.flow.exception.NotFoundException;
 import org.flowable.idm.api.Group;
