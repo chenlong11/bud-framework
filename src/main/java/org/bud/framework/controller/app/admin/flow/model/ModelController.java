@@ -8,7 +8,7 @@ import org.bud.framework.domain.flow.ModelRepresentation;
 import org.bud.framework.domain.system.User;
 import org.bud.framework.service.flow.model.ModelService;
 import org.bud.framework.util.WebUtil;
-import org.bud.framework.vo.flow.ModelVo;
+import org.bud.framework.domain.flow.ModelVo;
 import org.flowable.engine.RepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

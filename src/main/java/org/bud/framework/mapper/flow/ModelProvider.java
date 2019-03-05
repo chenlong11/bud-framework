@@ -3,7 +3,7 @@ package org.bud.framework.mapper.flow;
 import org.bud.framework.domain.flow.Model;
 import org.bud.framework.util.IdGenerateUtil;
 import org.bud.framework.util.StringUtil;
-import org.bud.framework.vo.flow.ModelVo;
+import org.bud.framework.domain.flow.ModelVo;
 
 /**
  * Created by chenlong

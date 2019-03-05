@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.bud.framework.domain.flow.Model;
-import org.bud.framework.vo.flow.ModelVo;
+import org.bud.framework.domain.flow.ModelVo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

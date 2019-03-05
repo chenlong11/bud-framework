@@ -12,7 +12,7 @@ import org.bud.framework.mapper.flow.ModelMapper;
 import org.bud.framework.mapper.flow.ModelRelationMapper;
 import org.bud.framework.util.StringUtil;
 import org.bud.framework.util.WebUtil;
-import org.bud.framework.vo.flow.ModelVo;
+import org.bud.framework.domain.flow.ModelVo;
 import org.flowable.bpmn.converter.BpmnXMLConverter;
 import org.flowable.bpmn.model.*;
 import org.flowable.bpmn.model.Process;
